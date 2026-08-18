@@ -2,6 +2,8 @@
 
 A production-oriented Railway template for [Rota](https://github.com/alpkeskin/rota), a proxy rotation platform with a Go proxy engine, Next.js dashboard, and TimescaleDB analytics.
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/rota)
+
 ![Rota](assets/rota-icon.png)
 
 ## What this deploys
