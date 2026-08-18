@@ -32,7 +32,22 @@ The GitHub release itself is not marked immutable. This wrapper therefore pins t
 | Volumes | Only TimescaleDB requires persistent default state. | One database volume; no cross-service filesystem. |
 | LAN access | The product manages externally reachable upstream proxies, not LAN-only devices. | Supported; private/LAN upstreams need an operator-provided tunnel and are not promised. |
 | Shared memory | No configurable `/dev/shm` requirement was found. | Supported. |
-| Resources | Upstream publishes no hard minimum. The four-service stack includes TimescaleDB and is not a free-tier micro workload. | Measure locally and live; document observed steady state before publication. |
+| Resources | Upstream publishes no hard minimum. The four-service stack includes TimescaleDB and is not a free-tier micro workload. | Live validation observed about 344 MB total memory at idle/validation load; see below. |
+
+## Validation evidence
+
+Validation completed on 2026-08-18 against the pinned wrapper revision and image digests.
+
+- All four production services reached `SUCCESS` with one running replica. Gateway and Core passed Railway health checks; the TimescaleDB volume was `READY` at `/var/lib/postgresql/data`.
+- Gateway returned structured healthy status, the Rota dashboard title and static assets, API documentation, and the OpenAPI document. Plain HTTP redirected to managed HTTPS.
+- Missing JWTs, an invalid administrator password, missing proxy credentials, and invalid proxy credentials all failed safely. Generated validation credentials successfully authenticated the dashboard API and public proxy endpoint.
+- A controlled private source imported one HTTP upstream proxy. Rota marked it active, forwarded HTTP traffic, completed HTTPS `CONNECT`, and carried authenticated dashboard WebSocket traffic.
+- A 262-second post-redeploy soak completed 18 health and proxy probes without failure and observed three recurring source fetches. Deployment IDs and replica counts remained stable.
+- A source, proxy, and pool survived a Core redeploy. The same records and authenticated traffic then survived a TimescaleDB redeploy; restart logs reported that the existing database directory was reused and initialization was skipped.
+- Exact current-deployment logs contained no unexplained DNS, database, scheduler, restart, OOM, panic, permission, or migration errors after the soak. TimescaleDB emitted only its expected first-initialization worker shutdown messages before the final server start.
+- Validation-only state and the controlled fixture were removed. The retained project contains only Gateway, Dashboard, Core, and TimescaleDB and remains healthy.
+
+Observed current memory after product traffic and redeploy testing was approximately 250 MB for TimescaleDB, 54 MB for Gateway, 31 MB for Dashboard, and 9 MB for Core. CPU was effectively idle at the observation point. These values are evidence from one low-load run, not resource guarantees or sizing limits.
 
 ## Adaptations and limits
 
