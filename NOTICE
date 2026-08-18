@@ -1,0 +1,16 @@
+Rota Railway Template Wrapper
+
+Copyright 2026 Tom
+
+This repository contains material adapted from Rota by Alp Keskin and contributors:
+https://github.com/alpkeskin/rota
+
+Pinned source revision:
+775e6d5af52c4e30753d767956ad74a2f96f8b2c
+
+Adapted material:
+- gateway/Caddyfile changes upstream's Docker Compose service names and public TLS handling for Railway private networking and Railway-managed HTTPS.
+- assets/rota-logo-upstream.png is an unchanged copy of static/rota_logo.png.
+- assets/rota-icon.png adds a dark rounded contrast background and resizes the official white mark for visibility in Railway dark and light themes.
+
+Rota and these adapted materials are provided under the Apache License 2.0 in LICENSE. Modified files are identified here and in their adjacent documentation.

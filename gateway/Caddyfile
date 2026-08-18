@@ -1,0 +1,13 @@
+# Adapted from Rota v2.2.1 for Railway-managed HTTPS and private service DNS.
+:{$PORT:8080} {
+	@core path /api/* /ws/* /docs /docs/* /health
+	handle @core {
+		reverse_proxy {$ROTA_CORE_HOST}:8001
+	}
+
+	handle {
+		reverse_proxy {$ROTA_DASHBOARD_HOST}:3000
+	}
+
+	encode gzip
+}
